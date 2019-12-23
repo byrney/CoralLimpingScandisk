@@ -4,6 +4,7 @@
     "@babel/core": "^7.3.4",
     "@babel/plugin-syntax-dynamic-import": "^7.2.0",
     "@babel/preset-env": "^7.3.4",
+    "@vue/babel-preset-jsx": "^1.1.2",
     "autoprefixer": "^9.5.0",
     "babel-loader": "^8.0.5",
     "case-sensitive-paths-webpack-plugin": "^2.2.0",
