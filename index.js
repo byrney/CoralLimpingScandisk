@@ -1,26 +1,25 @@
-let path = require("path");
-
-let webpack = require("webpack");
-let webpackDevServer = require("webpack-dev-server");
-
-let webpackConfig = require("./webpack.config");
-let webpackDevServerOptions = {
-  publicPath: "/",
-  contentBase: path.join(process.cwd(), "dist"),
-  historyApiFallback: true,
-  hot: true,
-  host: "0.0.0.0",
-  allowedHosts: [
-    ".repl.it",
-    ".repl.co",
-    ".repl.run"
-  ]
+const path = require('path');
+const webpack = require('webpack');
+const WebpackDevServer = require('webpack-dev-server');
+const webpackConfig = require('./webpack.config');
+const webpackDevServerOptions = {
+    publicPath: '/',
+    contentBase: path.join(process.cwd(), 'dist'),
+    historyApiFallback: true,
+    hot: true,
+    host: '0.0.0.0',
+    allowedHosts: [
+        '.repl.it',
+        '.repl.co',
+        '.repl.run'
+    ]
 };
 
-webpackDevServer.addDevServerEntrypoints(webpackConfig, webpackDevServerOptions);
-let webpackCompiler = webpack(webpackConfig);
+WebpackDevServer.addDevServerEntrypoints(webpackConfig, webpackDevServerOptions);
+const webpackCompiler = webpack(webpackConfig);
 
-let app = new webpackDevServer(webpackCompiler, webpackDevServerOptions);
+const app = new WebpackDevServer(webpackCompiler, webpackDevServerOptions);
 
-let port = process.env.PORT || 3000;
-app.listen(port, () => console.log(`App listening on ${port}`));
+const port = process.env.PORT || 3000;
+app.listen(port, undefined, () => process.stdout.write(`\nApp listening on ${port}\n`));
+// app.listen(port, () => console.log(`App listening on ${port}`));
