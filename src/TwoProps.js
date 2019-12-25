@@ -1,6 +1,8 @@
 
 const TwoProps = {
 
+    name: 'TwoProps',
+
     props: {
         colour: { type: String, required: true},
         size: { type: String, required: true}

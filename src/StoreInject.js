@@ -2,6 +2,8 @@ const _ = require('lodash');
 
 const StoreInject = {
 
+    name: 'StoreInject',
+
     computed: {
         storeColour(){
             return this.$store.state.storeColour;

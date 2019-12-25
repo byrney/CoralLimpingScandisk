@@ -1,6 +1,8 @@
 
 const StoreView = {
 
+    name: 'StoreView',
+
     computed: {
         storeColour: {
             get(){

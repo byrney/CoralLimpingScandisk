@@ -4,6 +4,8 @@ import StoreInject from './StoreInject.js';
 
 const App = {
 
+    name: 'App',
+
     data(){
         return {
             size: 'massive'
