@@ -6,6 +6,12 @@ const FriendlyErrorsWebpackPlugin = require("friendly-errors-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 
+const vueLoaderConfig = {};
+
+function resolve (dir) {
+  return path.join(__dirname, dir)
+}
+
 module.exports = {
     mode: "development",
     devtool: "cheap-module-eval-source-map",
@@ -63,447 +69,41 @@ module.exports = {
         rules: [
             {
                 test: /\.vue$/,
-                use: [
-                    {
-                        loader: "vue-loader",
-                        options: {
-                            compilerOptions: {
-                                preserveWhitespace: false
-                            }
-                        }
-                    }
-                ]
+                loader: 'vue-loader',
+                options: vueLoaderConfig
             },
             {
-                test: /\.(png|jpe?g|gif|webp)(\?.*)?$/,
-                use: [
-                    {
-                        loader: "url-loader",
-                        options: {
-                            limit: 4096,
-                            fallback: {
-                                loader: "file-loader",
-                                options: {
-                                    name: "img/[name].[hash:8].[ext]"
-                                }
-                            }
-                        }
-                    }
-                ]
+                test: /\.js$/,
+                loader: 'babel-loader',
+                include: [resolve('src'), resolve('test'), resolve('node_modules/webpack-dev-server/client')]
             },
             {
-                test: /\.(svg)(\?.*)?$/,
-                use: [
-                    {
-                        loader: "file-loader",
-                        options: {
-                            name: "img/[name].[hash:8].[ext]"
-                        }
-                    }
-                ]
-            },
-            {
-                test: /\.(mp4|webm|ogg|mp3|wav|flac|aac)(\?.*)?$/,
-                use: [
-                    {
-                        loader: "url-loader",
-                        options: {
-                            limit: 4096,
-                            fallback: {
-                                loader: "file-loader",
-                                options: {
-                                    name: "media/[name].[hash:8].[ext]"
-                                }
-                            }
-                        }
-                    }
-                ]
-            },
-            {
-                test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/i,
-                use: [
-                    {
-                        loader: "url-loader",
-                        options: {
-                            limit: 4096,
-                            fallback: {
-                                loader: "file-loader",
-                                options: {
-                                    name: "fonts/[name].[hash:8].[ext]"
-                                }
-                            }
-                        }
-                    }
-                ]
-            },
-            {
-                test: /\.pug$/,
-                use: [
-                    {
-                        loader: "pug-plain-loader"
-                    }
-                ]
+                test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
+                loader: 'url-loader',
+                options: {
+                    limit: 10000,
+                    name: 'img/[name].[hash:7].[ext]'
+                }
             },
             {
                 test: /\.css$/,
-                oneOf: [
-                    {
-                        resourceQuery: /module/,
-                        use: [
-                            {
-                                loader: "vue-style-loader",
-                                options: {
-                                    sourceMap: false,
-                                    shadowMode: false
-                                }
-                            },
-                            {
-                                loader: "css-loader",
-                                options: {
-                                    sourceMap: false,
-                                    importLoaders: 2,
-                                    modules: true,
-                                    localIdentName: "[name]_[local]_[hash:base64:5]"
-                                }
-                            },
-                            {
-                                loader: "postcss-loader",
-                                options: {
-                                    sourceMap: false
-                                }
-                            }
-                        ]
-                    },
-                    {
-                        resourceQuery: /\?vue/,
-                        use: [
-                            {
-                                loader: "vue-style-loader",
-                                options: {
-                                    sourceMap: false,
-                                    shadowMode: false
-                                }
-                            },
-                            {
-                                loader: "css-loader",
-                                options: {
-                                    sourceMap: false,
-                                    importLoaders: 2
-                                }
-                            },
-                            {
-                                loader: "postcss-loader",
-                                options: {
-                                    sourceMap: false
-                                }
-                            }
-                        ]
-                    },
-                    {
-                        test: /\.module\.\w+$/,
-                        use: [
-                            {
-                                loader: "vue-style-loader",
-                                options: {
-                                    sourceMap: false,
-                                    shadowMode: false
-                                }
-                            },
-                            {
-                                loader: "css-loader",
-                                options: {
-                                    sourceMap: false,
-                                    importLoaders: 2,
-                                    modules: true,
-                                    localIdentName: "[name]_[local]_[hash:base64:5]"
-                                }
-                            },
-                            {
-                                loader: "postcss-loader",
-                                options: {
-                                    sourceMap: false
-                                }
-                            }
-                        ]
-                    },
-                    {
-                        use: [
-                            {
-                                loader: "vue-style-loader",
-                                options: {
-                                    sourceMap: false,
-                                    shadowMode: false
-                                }
-                            },
-                            {
-                                loader: "css-loader",
-                                options: {
-                                    sourceMap: false,
-                                    importLoaders: 2
-                                }
-                            },
-                            {
-                                loader: "postcss-loader",
-                                options: {
-                                    sourceMap: false
-                                }
-                            }
-                        ]
-                    }
-                ]
+                loader: ['style-loader', 'css-loader']
             },
             {
-                test: /\.p(ost)?css$/,
-                oneOf: [
-                    {
-                        resourceQuery: /module/,
-                        use: [
-                            {
-                                loader: "vue-style-loader",
-                                options: {
-                                    sourceMap: false,
-                                    shadowMode: false
-                                }
-                            },
-                            {
-                                loader: "css-loader",
-                                options: {
-                                    sourceMap: false,
-                                    importLoaders: 2,
-                                    modules: true,
-                                    localIdentName: "[name]_[local]_[hash:base64:5]"
-                                }
-                            },
-                            {
-                                loader: "postcss-loader",
-                                options: {
-                                    sourceMap: false
-                                }
-                            }
-                        ]
-                    },
-                    {
-                        resourceQuery: /\?vue/,
-                        use: [
-                            {
-                                loader: "vue-style-loader",
-                                options: {
-                                    sourceMap: false,
-                                    shadowMode: false
-                                }
-                            },
-                            {
-                                loader: "css-loader",
-                                options: {
-                                    sourceMap: false,
-                                    importLoaders: 2
-                                }
-                            },
-                            {
-                                loader: "postcss-loader",
-                                options: {
-                                    sourceMap: false
-                                }
-                            }
-                        ]
-                    },
-                    {
-                        test: /\.module\.\w+$/,
-                        use: [
-                            {
-                                loader: "vue-style-loader",
-                                options: {
-                                    sourceMap: false,
-                                    shadowMode: false
-                                }
-                            },
-                            {
-                                loader: "css-loader",
-                                options: {
-                                    sourceMap: false,
-                                    importLoaders: 2,
-                                    modules: true,
-                                    localIdentName: "[name]_[local]_[hash:base64:5]"
-                                }
-                            },
-                            {
-                                loader: "postcss-loader",
-                                options: {
-                                    sourceMap: false
-                                }
-                            }
-                        ]
-                    },
-                    {
-                        use: [
-                            {
-                                loader: "vue-style-loader",
-                                options: {
-                                    sourceMap: false,
-                                    shadowMode: false
-                                }
-                            },
-                            {
-                                loader: "css-loader",
-                                options: {
-                                    sourceMap: false,
-                                    importLoaders: 2
-                                }
-                            },
-                            {
-                                loader: "postcss-loader",
-                                options: {
-                                    sourceMap: false
-                                }
-                            }
-                        ]
-                    }
-                ]
+                test: /\.(mp4|webm|ogg|mp3|wav|flac|aac)(\?.*)?$/,
+                loader: 'url-loader',
+                options: {
+                    limit: 10000,
+                    name: 'media/[name].[hash:7].[ext]'
+                }
             },
             {
-                test: /\.less$/,
-                oneOf: [
-                    {
-                        resourceQuery: /module/,
-                        use: [
-                            {
-                                loader: "vue-style-loader",
-                                options: {
-                                    sourceMap: false,
-                                    shadowMode: false
-                                }
-                            },
-                            {
-                                loader: "css-loader",
-                                options: {
-                                    sourceMap: false,
-                                    importLoaders: 2,
-                                    modules: true,
-                                    localIdentName: "[name]_[local]_[hash:base64:5]"
-                                }
-                            },
-                            {
-                                loader: "postcss-loader",
-                                options: {
-                                    sourceMap: false
-                                }
-                            },
-                            {
-                                loader: "less-loader",
-                                options: {
-                                    sourceMap: false
-                                }
-                            }
-                        ]
-                    },
-                    {
-                        resourceQuery: /\?vue/,
-                        use: [
-                            {
-                                loader: "vue-style-loader",
-                                options: {
-                                    sourceMap: false,
-                                    shadowMode: false
-                                }
-                            },
-                            {
-                                loader: "css-loader",
-                                options: {
-                                    sourceMap: false,
-                                    importLoaders: 2
-                                }
-                            },
-                            {
-                                loader: "postcss-loader",
-                                options: {
-                                    sourceMap: false
-                                }
-                            },
-                            {
-                                loader: "less-loader",
-                                options: {
-                                    sourceMap: false
-                                }
-                            }
-                        ]
-                    },
-                    {
-                        test: /\.module\.\w+$/,
-                        use: [
-                            {
-                                loader: "vue-style-loader",
-                                options: {
-                                    sourceMap: false,
-                                    shadowMode: false
-                                }
-                            },
-                            {
-                                loader: "css-loader",
-                                options: {
-                                    sourceMap: false,
-                                    importLoaders: 2,
-                                    modules: true,
-                                    localIdentName: "[name]_[local]_[hash:base64:5]"
-                                }
-                            },
-                            {
-                                loader: "postcss-loader",
-                                options: {
-                                    sourceMap: false
-                                }
-                            },
-                            {
-                                loader: "less-loader",
-                                options: {
-                                    sourceMap: false
-                                }
-                            }
-                        ]
-                    },
-                    {
-                        use: [
-                            {
-                                loader: "vue-style-loader",
-                                options: {
-                                    sourceMap: false,
-                                    shadowMode: false
-                                }
-                            },
-                            {
-                                loader: "css-loader",
-                                options: {
-                                    sourceMap: false,
-                                    importLoaders: 2
-                                }
-                            },
-                            {
-                                loader: "postcss-loader",
-                                options: {
-                                    sourceMap: false
-                                }
-                            },
-                            {
-                                loader: "less-loader",
-                                options: {
-                                    sourceMap: false
-                                }
-                            }
-                        ]
-                    }
-                ]
-            },
-            {
-                test: /\.m?jsx?$/,
-                exclude: [
-                    function() {
-                        /* omitted long function */
-                    }
-                ],
-                use: [
-                    {
-                        loader: "babel-loader"
-                    }
-                ]
+                test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
+                loader: 'url-loader',
+                options: {
+                    limit: 10000,
+                    name: 'fonts/[name].[hash:7].[ext]'
+                }
             }
         ]
     }
