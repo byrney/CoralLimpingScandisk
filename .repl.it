@@ -1,0 +1,3 @@
+langauge = "node"
+run = "node index.js"
+
