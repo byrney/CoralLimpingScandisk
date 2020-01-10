@@ -1,3 +1,2 @@
-langauge = "node"
 run = "node index.js"
-
+langauge = "node"
