@@ -3,7 +3,9 @@ import Vue from 'vue'
 
 const ViewComputed = {
     name: 'ViewComputed',
-    inject: ['appModel'],
+    props: {
+        appModel: {type: Object, required: true}
+    },
     render(){
         return (
             <div>Output: { this.appModel.output }</div>
@@ -13,7 +15,9 @@ const ViewComputed = {
 
 const ViewData = {
     name: 'ViewData',
-    inject: ['appModel'],
+    props: {
+        appModel: {type: Object, required: true}
+    },
     render(){
         return (
             <div>
@@ -26,7 +30,9 @@ const ViewData = {
 
 const ViewMutator = {
     name: 'ViewMutator',
-    inject: ['appModel'],
+    props: {
+        appModel: {type: Object, required: true}
+    },
     methods: {
         onClickChange(ev){
             this.appModel.doubleInput1();
@@ -46,7 +52,9 @@ const ViewSubscriber = {
             count: 0
         }
     },
-    inject: ['appModel'],
+    props: {
+        appModel: {type: Object, required: true}
+    },
     created(){
         this.appModel.$on('changeInput1', this.onInputChange);
     },
@@ -81,12 +89,6 @@ const Page = {
         return {
             model: new Vue(Model)
         };
-    },
-
-    provide(){
-        return {
-            appModel: this.model
-        }
     },
 
     created(){
