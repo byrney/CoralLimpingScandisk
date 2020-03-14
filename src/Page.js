@@ -1,28 +1,25 @@
-import Model from './Model.js'
 import Vue from 'vue'
+import Vuex from 'vuex'
+import VuexStore from './vuex-store.js'
+
+Vue.use(Vuex);
 
 const ViewComputed = {
     name: 'ViewComputed',
-    props: {
-        appModel: {type: Object, required: true}
-    },
     render(){
         return (
-            <div>Output: { this.appModel.output }</div>
+            <div>Output: { this.$store.getters.output }</div>
         );
     }
 };
 
 const ViewData = {
     name: 'ViewData',
-    props: {
-        appModel: {type: Object, required: true}
-    },
     render(){
         return (
             <div>
-                <span>Input1: { this.appModel.input1 }</span> &nbsp;
-                <span>Input2: { this.appModel.input2 }</span>
+                <span>Input1: { this.$store.getters.input1 }</span> &nbsp;
+                <span>Input2: { this.$store.getters.input2 }</span>
             </div>
         );
     }
@@ -30,12 +27,9 @@ const ViewData = {
 
 const ViewMutator = {
     name: 'ViewMutator',
-    props: {
-        appModel: {type: Object, required: true}
-    },
     methods: {
         onClickChange(ev){
-            this.appModel.doubleInput1();
+            this.$store.commit('doubleInput1');
         }
     },
     render(){
@@ -52,14 +46,13 @@ const ViewSubscriber = {
             count: 0
         }
     },
-    props: {
-        appModel: {type: Object, required: true}
+    computed: {
+        input1(){
+            return this.$store.getters.input1;
+        }
     },
-    created(){
-        this.appModel.$on('changeInput1', this.onInputChange);
-    },
-    methods: {
-        onInputChange(ev){
+    watch: {
+        input1(){
             this.count += 1;
         }
     },
@@ -84,19 +77,13 @@ const ViewInputProp = {
 
 const Page = {
     name: 'Page',
-
-    data(){
-        return {
-            model: new Vue(Model)
-        };
-    },
-
+    store: VuexStore.create(),
     created(){
     },
 
     methods: {
         onClickButton(ev){
-            this.model.incrementInput2();
+            this.$store.commit('incrementInput2');
         }
     },
     render(){
@@ -108,31 +95,31 @@ const Page = {
                 <br/>
                 <button onClick={this.onClickButton}>Input2 + 1</button>
                 <p>App Value</p>
-                <span>Input1: {this.model.input1}, Output: {this.model.output}</span>
+                <span>Input1: {this.$store.getters.input1}, Output: {this.$store.getters.output}</span>
                 <div class='component-container'>
                     <h2> View Data</h2>
-                    <p>This view takes the model as a prop and renders the model data</p>
-                    <ViewData appModel={this.model}/>
+                    <p>This view takes renders the store data</p>
+                    <ViewData />
                 </div>
                 <div class='component-container'>
                     <h2> View Computed</h2>
-                    <p>This view takes the model as a prop and renders a computed</p>
-                    <ViewComputed appModel={this.model}/>
+                    <p>This view takes renders a derived calculation</p>
+                    <ViewComputed/>
                 </div>
                 <div class='component-container'>
                     <h2> View Mutate</h2>
-                    <p>This view takes the model as a prop and calls a mutator on it</p>
-                    <ViewMutator appModel={this.model}/>
+                    <p>This view calls a mutator on it</p>
+                    <ViewMutator />
                 </div>
                 <div class='component-container'>
                     <h2> View Subscriber</h2>
                     <p>This view takes the model as a prop and subscribes to an event</p>
-                    <ViewSubscriber appModel={this.model}/>
+                    <ViewSubscriber />
                 </div>
                 <div class='component-container'>
                     <h2> View Input Prop</h2>
                     <p>This view takes model data as a prop and and renders it</p>
-                    <ViewInputProp input1={this.model.input1}/>
+                    <ViewInputProp input1={this.$store.getters.input1}/>
                 </div>
             </div>
         );
