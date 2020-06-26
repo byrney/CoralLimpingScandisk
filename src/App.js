@@ -2,7 +2,7 @@ const _ = require('lodash');
 
 function defaultCourier(){
     return {
-        id: null,
+        id: _.uniqueId(),
         name: 'None',
         startTime: new Date(0, 0, 0, 9),
         endTime: new Date(0, 0, 0, 17)
@@ -40,6 +40,14 @@ const FleetView = {
         onUpdatedCourier(newVal){
             const index = _.findIndex(this.couriers, {id: newVal.id});
             this.couriers.splice(index, 1, newVal);
+        },
+        onAddCourier(ev){
+            this.couriers.push(defaultCourier());
+        },
+        onRemoveCourier(ev){
+            const removeIndex = this.selectedCourierIndex;
+            this.selectedCourierIndex -= 1;
+            this.couriers.splice(removeIndex, 1);
         }
     },
     render(){
@@ -50,6 +58,17 @@ const FleetView = {
                     couriers={this.couriers}
                     selectedCourierIndex={this.selectedCourierIndex}
                     onSelectCourier={this.onSelectCourier}
+                />
+                <input
+                    type="button"
+                    value="+"
+                    onClick={this.onAddCourier}
+                />
+                <input
+                    type="button"
+                    value="-"
+                    onClick={this.onRemoveCourier}
+                    disabled={this.selectedCourierIndex < 0}
                 />
                 <h2>Courier</h2>
                 <CourierView
@@ -83,6 +102,7 @@ const CourierListView = {
                                    class="hidden"
                                    type="radio"
                                    name="couriers"
+                                   checked={index === this.selectedCourierIndex}
                                    value={index}
                                    key={courier.id}
                                    onChange={this.onChangeSelected}
