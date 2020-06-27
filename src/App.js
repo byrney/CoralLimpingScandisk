@@ -17,6 +17,33 @@ function demoCouriers(){
     ];
 }
 
+// "polyfill" for firefox missing scrollIntoViewIfNeeded
+// https://stackoverflow.com/questions/487073/how-to-check-if-element-is-visible-after-scrolling
+function visibleY(element){
+    let rect = element.getBoundingClientRect(), top = rect.top, height = rect.height;
+    let el = element.parentNode;
+    // Check if bottom of the element is off the page
+    if (rect.bottom < 0){
+        return false;
+    }
+    // Check its within the document viewport
+    if (top > document.documentElement.clientHeight){
+        return false;
+    }
+    do {
+        rect = el.getBoundingClientRect();
+        if (top <= rect.bottom === false){
+            return false;
+        }
+        // Check if the element is out of view due to a container scrolling
+        if ((top + height) <= rect.top){
+            return false;
+        }
+        el = el.parentNode;
+    } while (el != document.body)
+    return true;
+};
+
 const FleetView = {
     name: 'FleetView',
     props: {
@@ -175,7 +202,9 @@ const CourierListView = {
         selectedCourierIndex(newVal){
             if(newVal >= 0){
                 const el = this.$refs.courierRows[newVal];
-                el && el.scrollIntoViewIfNeeded();
+                if(!visibleY(el)){
+                    el && el.scrollIntoView();
+                }
             }
         }
     },
@@ -184,7 +213,7 @@ const CourierListView = {
             this.$emit('selectCourier', Number(ev.target.value));
         },
         formatTime(datetime){
-            return datetime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            return datetime.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
         }
     },
     render(){
@@ -233,7 +262,7 @@ const TimeInput = {
             return new Date(0, 0, 0, hhmm[0], hhmm[1]);
         },
         timeToString(datetime){
-            return datetime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+            return datetime.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })
         },
         onInput(ev){
             this.$emit('input', this.stringToTime(ev.target.value));
