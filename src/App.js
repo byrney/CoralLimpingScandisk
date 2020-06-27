@@ -77,6 +77,17 @@ const FleetView = {
             if(this.selectedCourierIndex === this.couriers.length){
                 this.selectedCourierIndex = this.couriers.length - 1;
             }
+        },
+        move(offset){
+            const startPos = this.selectedCourierIndex;
+            this.couriers.splice(startPos + offset, 0, this.couriers.splice(startPos, 1)[0]);
+            this.selectedCourierIndex += offset;
+        },
+        onMoveUp(ev){
+            this.move(-1);
+        },
+        onMoveDown(ev){
+            this.move(+1);
         }
     },
     render(){
@@ -91,17 +102,33 @@ const FleetView = {
                         onSelectCourier={this.onSelectCourier}
                     />
                 </div>
-                <input
-                    type="button"
-                    value=" + "
-                    onClick={this.onAddCourier}
-                />
-                <input
-                    type="button"
-                    value=" - "
-                    onClick={this.onRemoveCourier}
-                    disabled={this.selectedCourierIndex < 0}
-                />
+                <div class="fleet-addremove">
+                    <input
+                        type="button"
+                        value=" + "
+                        onClick={this.onAddCourier}
+                    />
+                    <input
+                        type="button"
+                        value=" - "
+                        onClick={this.onRemoveCourier}
+                        disabled={this.selectedCourierIndex < 0}
+                    />
+                </div>
+                <div class="fleet-updown">
+                    <input type="button"
+                        value={"\u2191"}
+                        onClick={this.onMoveUp}
+                        disabled={this.selectedCourierIndex < 1}
+                    />
+                    &nbsp;
+                    <input
+                        type="button"
+                        value={"\u2193"}
+                        onClick={this.onMoveDown}
+                        disabled={this.selectedCourierIndex < 0 || this.selectedCourierIndex >= this.couriers.length - 1}
+                    />
+                </div>
                 <h2>Member</h2>
                 <CourierView
                     ref="courierView"

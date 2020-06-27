@@ -6,6 +6,10 @@
     margin-top: 60px;
 }
 
+h2 {
+    text-align: center;
+}
+
 li.selected {
     background: green;
     color: white;
@@ -51,6 +55,16 @@ ul.couriers {
 
 .fleet-buttons {
     padding: 30px;
+}
+
+.fleet-addremove {
+    float: left;
+    padding-left: 10px;
+}
+
+.fleet-updown {
+    float: right;
+    padding-right: 10px;
 }
 
 .hidden {
