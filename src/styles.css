@@ -21,6 +21,8 @@ li.selected {
     overflow-y: auto;
     border: solid silver 2px;
     user-select: none;
+    clear: both;
+    margin-top: 30px;
 }
 
 ul.couriers {
@@ -50,12 +52,23 @@ ul.couriers {
     margin-right: 3px;
 }
 
+.courier {
+    margin: 30px;
+    border-radius: 30px;
+}
+
 .courier label {
     margin: 30px;
 }
 
 .fleet-buttons {
-    padding: 30px;
+    padding: 10px;
+    float: right;
+}
+
+.submit-button:enabled {
+    background: #80aaff;
+    color: white;
 }
 
 .fleet-addremove {

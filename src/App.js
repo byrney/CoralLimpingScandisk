@@ -11,7 +11,7 @@ function demoCouriers(){
     return [
         { id: _.uniqueId(), name: 'Badger', startTime: new Date(0, 0, 0, 9, 15), endTime: new Date(0, 0, 0, 17), capacity: 20 },
         { id: _.uniqueId(), name: 'Toad', startTime: new Date(0, 0, 0, 8, 45), endTime: new Date(0, 0, 0, 21), capacity: 2 },
-        { id: _.uniqueId(), name: 'Weasle', startTime: new Date(0, 0, 0, 6, 15), endTime: new Date(0, 0, 0, 16, 30), capacity: 7 },
+        { id: _.uniqueId(), name: 'Weasel', startTime: new Date(0, 0, 0, 6, 15), endTime: new Date(0, 0, 0, 16, 30), capacity: 7 },
         { id: _.uniqueId(), name: 'Mole', startTime: new Date(0, 0, 0, 9, 20), endTime: new Date(0, 0, 0, 17, 30), capacity: 14 },
         { id: _.uniqueId(), name: 'Rat', startTime: new Date(0, 0, 0, 8, 15), endTime: new Date(0, 0, 0, 17, 15), capacity: 9 }
     ];
@@ -100,6 +100,35 @@ const FleetView = {
         return (
             <div class="fleet">
                 <h2>Team</h2>
+                <div class="fleet-list-controls">
+                    <div class="fleet-addremove">
+                        <input
+                            type="button"
+                            value=" + "
+                            onClick={this.onAddCourier}
+                        />
+                        <input
+                            type="button"
+                            value=" - "
+                            onClick={this.onRemoveCourier}
+                            disabled={this.selectedCourierIndex < 0}
+                        />
+                    </div>
+                    <div class="fleet-updown">
+                        <input type="button"
+                            value={"\u2191"}
+                            onClick={this.onMoveUp}
+                            disabled={this.selectedCourierIndex < 1}
+                        />
+                        &nbsp;
+                        <input
+                            type="button"
+                            value={"\u2193"}
+                            onClick={this.onMoveDown}
+                            disabled={this.selectedCourierIndex < 0 || this.selectedCourierIndex >= this.couriers.length - 1}
+                        />
+                    </div>
+                </div>
                 <div class="courier-list-scroll">
                     <CourierListView
                         nativeOnKeyup={this.onListKeyUp}
@@ -109,34 +138,6 @@ const FleetView = {
                         onSelectCourier={this.onSelectCourier}
                     />
                 </div>
-                <div class="fleet-addremove">
-                    <input
-                        type="button"
-                        value=" + "
-                        onClick={this.onAddCourier}
-                    />
-                    <input
-                        type="button"
-                        value=" - "
-                        onClick={this.onRemoveCourier}
-                        disabled={this.selectedCourierIndex < 0}
-                    />
-                </div>
-                <div class="fleet-updown">
-                    <input type="button"
-                        value={"\u2191"}
-                        onClick={this.onMoveUp}
-                        disabled={this.selectedCourierIndex < 1}
-                    />
-                    &nbsp;
-                    <input
-                        type="button"
-                        value={"\u2193"}
-                        onClick={this.onMoveDown}
-                        disabled={this.selectedCourierIndex < 0 || this.selectedCourierIndex >= this.couriers.length - 1}
-                    />
-                </div>
-                <h2>Member</h2>
                 <CourierView
                     ref="courierView"
                     courier={this.selectedCourier}
@@ -144,6 +145,7 @@ const FleetView = {
                 />
                 <div class="fleet-buttons">
                     <input type="button"
+                        class="submit-button"
                         value="Update Fleet"
                         onClick={this.update}
                         disabled={this.modified}
@@ -151,6 +153,7 @@ const FleetView = {
                     &nbsp;
                     <input
                         type="button"
+                        class="cancel-button"
                         value="Reset Fleet"
                         onClick={this.reset}
                         disabled={this.modified}
@@ -274,6 +277,7 @@ const CourierView = {
     render(){
         return (
             <fieldset class="courier" disabled={this.courier === null}>
+                <h2>{this.editing.name}</h2>
                 <label>
                     <span>Name:&nbsp;</span>
                     <input ref="nameInput" type="text" v-model={this.editing.name} onInput={this.update}/>
