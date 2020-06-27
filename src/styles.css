@@ -7,7 +7,39 @@
 }
 
 li.selected {
-    color: green;
+    background: green;
+    color: white;
+}
+
+.courier-list-scroll {
+    height: 100px;
+    overflow-y: auto;
+    border: solid black 1px;
+}
+
+ul.couriers {
+    margin-top: 0px;
+    margin-bottom: 0px;
+    list-style: none;
+    padding-left: 1px;
+}
+
+.couriers label {
+    display: inline-block;
+    width: 100%;
+}
+
+.courier label {
+    margin: 30px;
+}
+
+.courier-buttons {
+    padding: 30px;
+}
+
+.hidden {
+    width: 0px;
+    height: 0px;
 }
 
 button {
