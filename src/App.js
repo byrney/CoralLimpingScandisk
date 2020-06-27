@@ -1,9 +1,10 @@
 const _ = require('lodash');
 
 function defaultCourier(){
+    const id = _.uniqueId();
     return {
-        id: _.uniqueId(),
-        name: 'None',
+        id: id,
+        name: `Unnamed ${id}`,
         startTime: new Date(0, 0, 0, 9),
         endTime: new Date(0, 0, 0, 17)
     }
@@ -62,6 +63,9 @@ const FleetView = {
         },
         onAddCourier(ev){
             this.couriers.splice(this.selectedCourierIndex, 0, defaultCourier());
+            if(this.selectedCourierIndex === -1){
+                this.selectedCourierIndex = 0;
+            }
         },
         onRemoveCourier(ev){
             const removeIndex = this.selectedCourierIndex;
@@ -115,6 +119,9 @@ const CourierListView = {
     methods: {
         onChangeSelected(ev){
             this.$emit('selectCourier', Number(ev.target.value));
+        },
+        formatTime(datetime){
+            return datetime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
         }
     },
     render(){
@@ -122,7 +129,8 @@ const CourierListView = {
             <ul class="couriers">
                 {
                     _.map(this.couriers, (courier, index) => (
-                        <li class={ {selected: index === this.selectedCourierIndex} }>
+                        <li
+                            class={ {selected: index === this.selectedCourierIndex, 'couriers-row': true} }>
                             <label >
                                 <input
                                    class="hidden"
@@ -133,11 +141,8 @@ const CourierListView = {
                                    key={courier.id}
                                    onChange={this.onChangeSelected}
                                 />
-                                <span>{courier.name}</span>
-                                &nbsp;
-                                <span>{courier.startTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
-                                &nbsp;
-                                <span>{courier.endTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                                <span class="couriers-title">{courier.name}</span>
+                                <span class="couriers-deets">{this.formatTime(courier.startTime)} - {this.formatTime(courier.endTime)}</span>
                             </label>
                         </li>
                     ))

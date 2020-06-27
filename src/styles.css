@@ -14,7 +14,7 @@ li.selected {
 .courier-list-scroll {
     height: 100px;
     overflow-y: auto;
-    border: solid black 1px;
+    border: solid silver 2px;
     user-select: none;
 }
 
@@ -28,6 +28,20 @@ ul.couriers {
 .couriers label {
     display: inline-block;
     width: 100%;
+}
+
+.couriers-row {
+    border: solid black 1px;
+    border-radius: 3px;
+    margin: 3px;
+}
+
+.couriers-title {
+}
+
+.couriers-deets {
+    float: right;
+    margin-right: 3px;
 }
 
 .courier label {
