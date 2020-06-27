@@ -54,6 +54,7 @@ const FleetView = {
     methods: {
         reset(){
             this.couriers = _.clone(this.fleet);
+            this.selectedCourierIndex = this.fleet.length > 0 ? 0 : -1;
         },
         update(){
             this.$emit('fleetChanged', this.couriers);
@@ -78,16 +79,21 @@ const FleetView = {
                 this.selectedCourierIndex = this.couriers.length - 1;
             }
         },
-        move(offset){
+        _move(offset){
             const startPos = this.selectedCourierIndex;
             this.couriers.splice(startPos + offset, 0, this.couriers.splice(startPos, 1)[0]);
             this.selectedCourierIndex += offset;
         },
+        onListKeyUp(ev){
+            if(ev.keyCode === 13){
+                this.$refs.courierView.focus();
+            }
+        },
         onMoveUp(ev){
-            this.move(-1);
+            this._move(-1);
         },
         onMoveDown(ev){
-            this.move(+1);
+            this._move(+1);
         }
     },
     render(){
@@ -96,6 +102,7 @@ const FleetView = {
                 <h2>Team</h2>
                 <div class="courier-list-scroll">
                     <CourierListView
+                        nativeOnKeyup={this.onListKeyUp}
                         couriers={this.couriers}
                         courierStates={this.courierStates}
                         selectedCourierIndex={this.selectedCourierIndex}
@@ -155,12 +162,20 @@ const FleetView = {
 };
 
 const CourierListView = {
+    name: 'CourierListView',
     props: {
         couriers: {type: Array, required: true},
         courierStates: {type: Array, required: true},
         selectedCourierIndex: {type: Number, required: true}
     },
-    name: 'CourierListView',
+    watch: {
+        selectedCourierIndex(newVal){
+            if(newVal >= 0){
+                const el = this.$refs.courierRows[newVal];
+                el && el.scrollIntoViewIfNeeded();
+            }
+        }
+    },
     methods: {
         onChangeSelected(ev){
             this.$emit('selectCourier', Number(ev.target.value));
@@ -171,12 +186,17 @@ const CourierListView = {
     },
     render(){
         return (
-            <ul class="couriers">
+            <ul ref="couriers" class="couriers">
                 {
                     _.map(this.couriers, (courier, index) => (
                         <li
-                            class={ {selected: index === this.selectedCourierIndex, 'couriers-row': true} }>
-                            <label >
+                            refInFor="true"
+                            ref="courierRows"
+                            class={ {
+                                selected: index === this.selectedCourierIndex,
+                                'couriers-row': true
+                            } }>
+                            <label>
                                 <input
                                    class="hidden"
                                    type="radio"
@@ -200,6 +220,7 @@ const CourierListView = {
 }
 
 const TimeInput = {
+    name: 'TimeInput',
     props: {
         value: {type: Date, default: undefined}
     },
@@ -227,6 +248,7 @@ const TimeInput = {
 };
 
 const CourierView = {
+    name: 'CourierView',
     props: {
         courier: {type: Object, default: null}
     },
