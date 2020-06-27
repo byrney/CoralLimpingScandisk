@@ -40,6 +40,15 @@ const FleetView = {
         },
         modified(){
             return _.isEqual(this.couriers, this.fleet);
+        },
+        courierStates(){
+            return _.map(this.couriers, courier => {
+                const fleetCourier = _.find(this.fleet, {id: courier.id});
+                if(!fleetCourier){
+                    return '+';
+                }
+                return _.isEqual(courier, fleetCourier) ? '' : '*';
+            });
         }
     },
     methods: {
@@ -78,6 +87,7 @@ const FleetView = {
                 <div class="courier-list-scroll">
                     <CourierListView
                         couriers={this.couriers}
+                        courierStates={this.courierStates}
                         selectedCourierIndex={this.selectedCourierIndex}
                         onSelectCourier={this.onSelectCourier}
                     />
@@ -121,6 +131,7 @@ const FleetView = {
 const CourierListView = {
     props: {
         couriers: {type: Array, required: true},
+        courierStates: {type: Array, required: true},
         selectedCourierIndex: {type: Number, required: true}
     },
     name: 'CourierListView',
@@ -150,6 +161,7 @@ const CourierListView = {
                                    onChange={this.onChangeSelected}
                                 />
                                 <span class="couriers-title">{courier.name}</span>
+                                <span class="courier-state">&nbsp;{this.courierStates[index]}&nbsp;</span>
                                 <span class="couriers-deets">{this.formatTime(courier.startTime)} - {this.formatTime(courier.endTime)}</span>
                             </label>
                         </li>
