@@ -15,6 +15,7 @@ li.selected {
     height: 100px;
     overflow-y: auto;
     border: solid black 1px;
+    user-select: none;
 }
 
 ul.couriers {
