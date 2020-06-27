@@ -22,6 +22,11 @@ const FleetView = {
     props: {
         fleet: {type: Array, required: true}
     },
+    watch: {
+        fleet(){
+            this.reset();
+        }
+    },
     data(){
         return {
             couriers: _.clone(this.fleet),
