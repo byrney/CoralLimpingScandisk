@@ -6,7 +6,8 @@ function defaultCourier(){
         id: id,
         name: `Unnamed ${id}`,
         startTime: new Date(0, 0, 0, 9),
-        endTime: new Date(0, 0, 0, 17)
+        endTime: new Date(0, 0, 0, 17),
+        capacity: 10
     }
 }
 
@@ -15,27 +16,32 @@ function demoCouriers(){
         id: _.uniqueId(),
         name: 'Badger',
         startTime: new Date(0, 0, 0, 9, 15),
-        endTime: new Date(0, 0, 0, 17)
+        endTime: new Date(0, 0, 0, 17),
+        capacity: 20
     }, {
         id: _.uniqueId(),
         name: 'Toad',
         startTime: new Date(0, 0, 0, 8, 45),
-        endTime: new Date(0, 0, 0, 21)
+        endTime: new Date(0, 0, 0, 21),
+        capacity: 2
     }, {
         id: _.uniqueId(),
         name: 'Weasle',
         startTime: new Date(0, 0, 0, 6, 15),
-        endTime: new Date(0, 0, 0, 16, 30)
+        endTime: new Date(0, 0, 0, 16, 30),
+        capacity: 7
     }, {
         id: _.uniqueId(),
         name: 'Mole',
         startTime: new Date(0, 0, 0, 9, 20),
-        endTime: new Date(0, 0, 0, 17, 30)
+        endTime: new Date(0, 0, 0, 17, 30),
+        capacity: 14
     }, {
         id: _.uniqueId(),
         name: 'Rat',
         startTime: new Date(0, 0, 0, 8, 15),
-        endTime: new Date(0, 0, 0, 17, 15)
+        endTime: new Date(0, 0, 0, 17, 15),
+        capacity: 9
     }];
 }
 
@@ -219,6 +225,10 @@ const CourierView = {
                     <span>Hours:&nbsp;</span>
                     <TimeInput v-model={this.editing.startTime} />
                     <TimeInput v-model={this.editing.endTime}/>
+                </label>
+                <label>
+                    <span>Capacity:&nbsp;</span>
+                    <input type="number" v-model={this.editing.capacity} />
                 </label>
                 <div class="courier-buttons">
                     <input type="button"
