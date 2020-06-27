@@ -66,10 +66,9 @@ const FleetView = {
             this.couriers.splice(index, 1, newVal);
         },
         onAddCourier(ev){
-            this.couriers.splice(this.selectedCourierIndex, 0, defaultCourier());
-            if(this.selectedCourierIndex === -1){
-                this.selectedCourierIndex = 0;
-            }
+            const pos = Math.max(this.selectedCourierIndex, 0);
+            this.couriers.splice(pos, 0, defaultCourier());
+            this.selectedCourierIndex = pos;
             this.$nextTick(() => this.$refs.courierView.focus());
         },
         onRemoveCourier(ev){
