@@ -53,12 +53,35 @@ ul.couriers {
 }
 
 .courier {
-    margin: 30px;
     border-radius: 30px;
+    clear: both;
 }
 
 .courier label {
     margin: 30px;
+}
+
+.link-like-button {
+    border: none;
+    background: none;
+    margin: 30px;
+}
+
+.link-like-button:enabled {
+    color: blue;
+}
+
+.courier .navigation {
+    float: right;
+}
+
+.actions {
+    float: right;
+}
+
+
+.destructive-button:enabled {
+    color: brown;
 }
 
 .fleet-buttons {
@@ -77,8 +100,7 @@ ul.couriers {
 }
 
 .fleet-updown {
-    float: right;
-    padding-right: 10px;
+    padding-left: 10px;
 }
 
 .hidden {

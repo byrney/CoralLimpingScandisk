@@ -57,7 +57,7 @@ const FleetView = {
     data(){
         return {
             couriers: _.clone(this.fleet),
-            selectedCourierIndex: -1
+            selectedCourierIndex: this.fleet.length > 0 ? 0 : -1
         };
     },
     computed: {
@@ -116,6 +116,12 @@ const FleetView = {
                 this.$refs.courierView.focus();
             }
         },
+        onNext(){
+            this.selectedCourierIndex = (this.selectedCourierIndex + 1) % this.couriers.length;
+        },
+        onPrev(){
+            this.selectedCourierIndex = (this.selectedCourierIndex - 1) % this.couriers.length;
+        },
         onMoveUp(ev){
             this._move(-1);
         },
@@ -126,21 +132,74 @@ const FleetView = {
     render(){
         return (
             <div class="fleet">
-                <h2>Team</h2>
-                <div class="fleet-list-controls">
-                    <div class="fleet-addremove">
+                <fieldset class="courier" disabled={this.selectedCourierIndex < 0}>
+                    <legend>Couriers</legend>
+                    <div class="navigation">
                         <input
                             type="button"
-                            value=" + "
-                            onClick={this.onAddCourier}
+                            onClick={this.onPrev}
+                            value="Prev"
+                            disabled={this.selectedCourierIndex <= 0}
                         />
                         <input
                             type="button"
-                            value=" - "
-                            onClick={this.onRemoveCourier}
-                            disabled={this.selectedCourierIndex < 0}
+                            onClick={this.onNext}
+                            value="Next"
+                            disabled={this.selectedCourierIndex >= this.couriers.length -1 }
                         />
                     </div>
+                    <h2>
+                        {this.selectedCourier ? this.selectedCourier.name : 'None'}
+                    </h2>
+                    <CourierView
+                        ref="courierView"
+                        courier={this.selectedCourier}
+                        onUpdate={this.onUpdateCourier}
+                        onRemove={this.onRemoveCourier}
+                    />
+                    <div class="actions">
+                        <input
+                            class="destructive-button"
+                            type="button"
+                            value={"Remove"}
+                            onClick={this.onRemoveCourier}
+                        />
+                    </div>
+                </fieldset>
+                <div class="actions">
+                    <input type="button"
+                        class="submit-button"
+                        value="Update Fleet"
+                        onClick={this.update}
+                        disabled={this.modified}
+                    />
+                    &nbsp;
+                    <input
+                        type="button"
+                        class="destructive-button"
+                        value="Reset Fleet"
+                        onClick={this.reset}
+                        disabled={this.modified}
+                    />
+                </div>
+                <div>
+                    <input
+                        type="button"
+                        value={"New Courier"}
+                        onClick={this.onAddCourier}
+                    />
+                </div>
+                <h2>Team</h2>
+                <div class="courier-list-scroll">
+                    <CourierListView
+                        nativeOnKeyup={this.onListKeyUp}
+                        couriers={this.couriers}
+                        courierStates={this.courierStates}
+                        selectedCourierIndex={this.selectedCourierIndex}
+                        onSelectCourier={this.onSelectCourier}
+                    />
+                </div>
+                <div class="fleet-list-controls">
                     <div class="fleet-updown">
                         <input type="button"
                             value={"\u2191"}
@@ -155,36 +214,6 @@ const FleetView = {
                             disabled={this.selectedCourierIndex < 0 || this.selectedCourierIndex >= this.couriers.length - 1}
                         />
                     </div>
-                </div>
-                <div class="courier-list-scroll">
-                    <CourierListView
-                        nativeOnKeyup={this.onListKeyUp}
-                        couriers={this.couriers}
-                        courierStates={this.courierStates}
-                        selectedCourierIndex={this.selectedCourierIndex}
-                        onSelectCourier={this.onSelectCourier}
-                    />
-                </div>
-                <CourierView
-                    ref="courierView"
-                    courier={this.selectedCourier}
-                    onUpdate={this.onUpdateCourier}
-                />
-                <div class="fleet-buttons">
-                    <input type="button"
-                        class="submit-button"
-                        value="Update Fleet"
-                        onClick={this.update}
-                        disabled={this.modified}
-                    />
-                    &nbsp;
-                    <input
-                        type="button"
-                        class="cancel-button"
-                        value="Reset Fleet"
-                        onClick={this.reset}
-                        disabled={this.modified}
-                    />
                 </div>
             </div>
         );
@@ -301,12 +330,14 @@ const CourierView = {
         focus(){
             this.$refs.nameInput.focus();
             this.$refs.nameInput.select();
+        },
+        onRemove(){
+            this.$emit('remove');
         }
     },
     render(){
         return (
-            <fieldset class="courier" disabled={this.courier === null}>
-                <h2>{this.editing.name}</h2>
+            <div>
                 <label>
                     <span>Name:&nbsp;</span>
                     <input ref="nameInput" type="text" v-model={this.editing.name} onInput={this.update}/>
@@ -321,7 +352,7 @@ const CourierView = {
                     <span>Capacity:&nbsp;</span>
                     <input type="number" v-model={this.editing.capacity} onInput={this.update}/>
                 </label>
-            </fieldset>
+            </div>
         );
     }
 }
