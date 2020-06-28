@@ -131,21 +131,15 @@ const FleetView = {
             <div class="fleet">
                 <fieldset class="courier" disabled={this.selectedCourierIndex < 0}>
                     <legend>Couriers</legend>
-                    <div class="navigation">
+                    <div class="actions">
                         <input
+                            class="destructive-button"
                             type="button"
-                            onClick={this.onPrev}
-                            value="Prev"
-                            disabled={this.selectedCourierIndex <= 0}
-                        />
-                        <input
-                            type="button"
-                            onClick={this.onNext}
-                            value="Next"
-                            disabled={this.selectedCourierIndex >= this.couriers.length -1 }
+                            value={"Remove"}
+                            onClick={this.onRemoveCourier}
                         />
                     </div>
-                    <h2>
+                    <h2 class="courier-title">
                         {this.selectedCourier ? this.selectedCourier.name : 'None'}
                     </h2>
                     <CourierView
@@ -154,12 +148,19 @@ const FleetView = {
                         onUpdate={this.onUpdateCourier}
                         onRemove={this.onRemoveCourier}
                     />
-                    <div class="actions">
+                    <div class="navigation">
                         <input
-                            class="destructive-button"
                             type="button"
-                            value={"Remove"}
-                            onClick={this.onRemoveCourier}
+                            onClick={this.onPrev}
+                            value="Prev"
+                            disabled={this.selectedCourierIndex <= 0}
+                        />
+                        &nbsp;
+                        <input
+                            type="button"
+                            onClick={this.onNext}
+                            value="Next"
+                            disabled={this.selectedCourierIndex >= this.couriers.length -1 }
                         />
                     </div>
                 </fieldset>
@@ -318,9 +319,6 @@ const CourierView = {
         focus(){
             this.$refs.nameInput.focus();
             this.$refs.nameInput.select();
-        },
-        onRemove(){
-            this.$emit('remove');
         }
     },
     render(){
