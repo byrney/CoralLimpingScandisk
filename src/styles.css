@@ -17,12 +17,13 @@ li.selected {
 }
 
 .courier-list-scroll {
-    height: 100px;
+    position: relative;
+    height: 800px;
     overflow-y: auto;
     border: solid silver 2px;
     user-select: none;
     clear: both;
-    margin-top: 30px;
+    margin-top: 5px;
 }
 
 ul.couriers {

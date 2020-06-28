@@ -17,32 +17,17 @@ function demoCouriers(){
     ];
 }
 
-// "polyfill" for firefox missing scrollIntoViewIfNeeded
-// https://stackoverflow.com/questions/487073/how-to-check-if-element-is-visible-after-scrolling
-function visibleY(element){
-    let rect = element.getBoundingClientRect(), top = rect.top, height = rect.height;
-    let el = element.parentNode;
-    // Check if bottom of the element is off the page
-    if (rect.bottom < 0){
-        return false;
+function scrollIfNeeded(element, container) {
+  if (element.offsetTop < container.scrollTop) {
+    container.scrollTop = element.offsetTop;
+  } else {
+    const offsetBottom = element.offsetTop + element.offsetHeight;
+    const scrollBottom = container.scrollTop + container.offsetHeight;
+    if (offsetBottom > scrollBottom) {
+      container.scrollTop = offsetBottom - container.offsetHeight;
     }
-    // Check its within the document viewport
-    if (top > document.documentElement.clientHeight){
-        return false;
-    }
-    do {
-        rect = el.getBoundingClientRect();
-        if (top <= rect.bottom === false){
-            return false;
-        }
-        // Check if the element is out of view due to a container scrolling
-        if ((top + height) <= rect.top){
-            return false;
-        }
-        el = el.parentNode;
-    } while (el != document.body)
-    return true;
-};
+  }
+}
 
 const FleetView = {
     name: 'FleetView',
@@ -52,6 +37,11 @@ const FleetView = {
     watch: {
         fleet(){
             this.reset();
+        },
+        selectedCourierIndex(newVal){
+            if(newVal >= 0){
+                this._scrollListToIndex(newVal);
+            }
         }
     },
     data(){
@@ -79,6 +69,11 @@ const FleetView = {
         }
     },
     methods: {
+        _scrollListToIndex(index){
+            const scroll = this.$refs.courierListScroll;
+            const el = this.$refs.courierList.$refs.courierRows[index];
+            scrollIfNeeded(el, scroll);
+        },
         reset(){
             this.couriers = _.clone(this.fleet);
             this.selectedCourierIndex = this.fleet.length > 0 ? 0 : -1;
@@ -97,6 +92,7 @@ const FleetView = {
             const pos = Math.max(this.selectedCourierIndex, 0);
             this.couriers.splice(pos, 0, defaultCourier());
             this.selectedCourierIndex = pos;
+            this._scrollListToIndex(pos);
             this.$nextTick(() => this.$refs.courierView.focus());
         },
         onRemoveCourier(ev){
@@ -104,6 +100,7 @@ const FleetView = {
             this.couriers.splice(removeIndex, 1);
             if(this.selectedCourierIndex === this.couriers.length){
                 this.selectedCourierIndex = this.couriers.length - 1;
+                this._scrollListToIndex(this.selectedCourierIndex);
             }
         },
         _move(offset){
@@ -190,15 +187,6 @@ const FleetView = {
                     />
                 </div>
                 <h2>Team</h2>
-                <div class="courier-list-scroll">
-                    <CourierListView
-                        nativeOnKeyup={this.onListKeyUp}
-                        couriers={this.couriers}
-                        courierStates={this.courierStates}
-                        selectedCourierIndex={this.selectedCourierIndex}
-                        onSelectCourier={this.onSelectCourier}
-                    />
-                </div>
                 <div class="fleet-list-controls">
                     <div class="fleet-updown">
                         <input type="button"
@@ -215,6 +203,16 @@ const FleetView = {
                         />
                     </div>
                 </div>
+                <div ref="courierListScroll" class="courier-list-scroll">
+                    <CourierListView
+                        ref="courierList"
+                        nativeOnKeyup={this.onListKeyUp}
+                        couriers={this.couriers}
+                        courierStates={this.courierStates}
+                        selectedCourierIndex={this.selectedCourierIndex}
+                        onSelectCourier={this.onSelectCourier}
+                    />
+                </div>
             </div>
         );
     }
@@ -226,16 +224,6 @@ const CourierListView = {
         couriers: {type: Array, required: true},
         courierStates: {type: Array, required: true},
         selectedCourierIndex: {type: Number, required: true}
-    },
-    watch: {
-        selectedCourierIndex(newVal){
-            if(newVal >= 0){
-                const el = this.$refs.courierRows[newVal];
-                if(!visibleY(el)){
-                    el && el.scrollIntoView();
-                }
-            }
-        }
     },
     methods: {
         onChangeSelected(ev){
