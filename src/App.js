@@ -1,4 +1,5 @@
 const _ = require('lodash');
+const FleetTable = require('./fleet-table.js');
 
 function defaultCourier(){
     const id = _.uniqueId();
@@ -346,7 +347,6 @@ const CourierView = {
     }
 }
 
-
 const App = {
     name: 'App',
     data(){
@@ -362,7 +362,12 @@ const App = {
     render(){
         return (
             <div id="app">
-                <FleetView fleet={this.fleet} onFleetChanged={this.onFleetChanged} />
+                <div class="left">
+                    <FleetView fleet={this.fleet} onFleetChanged={this.onFleetChanged} />
+                </div>
+                <div class="right">
+                    <FleetTable fleet={this.fleet}/>
+                </div>
             </div>
         );
     }

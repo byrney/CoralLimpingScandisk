@@ -4,7 +4,19 @@
     -moz-osx-font-smoothing: grayscale;
     color: #2c3e50;
     height: 100vh;
-    max-width: 700px;
+    padding: 10px;
+    display: grid;
+    column-gap: 30px;
+    grid-template-columns: auto 1fr;
+    grid-template-areas: 'left right';
+}
+
+.left {
+    grid-area: left;
+}
+
+.right {
+    grid-area: right;
 }
 
 h2 {
