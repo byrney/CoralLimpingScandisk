@@ -180,7 +180,7 @@ const ListEdit = {
                     </div>
                 </div>
                 <h2>Team</h2>
-                <div class="fleet-list-controls">
+                <div class="list-move-controls">
                     <div class="fleet-updown">
                         <input type="button"
                             value={"\u2191"}
