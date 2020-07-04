@@ -28,37 +28,11 @@ li.selected {
     color: white;
 }
 
-.fleet {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-}
-
-.courier-list-scroll {
-    position: relative;
-    overflow-y: auto;
-    border: solid silver 2px;
-    user-select: none;
-    margin-top: 5px;
-    flex: 1;
-    padding-bottom: 20px;
-}
 
 .courier-title {
     color: green;
 }
 
-ul.couriers {
-    margin-top: 0px;
-    margin-bottom: 0px;
-    list-style: none;
-    padding-left: 1px;
-}
-
-.couriers label {
-    display: inline-block;
-    width: 100%;
-}
 
 .couriers-row {
     border: solid black 1px;
@@ -75,12 +49,7 @@ ul.couriers {
     margin-right: 3px;
 }
 
-.courier {
-    border-radius: 30px;
-    clear: both;
-}
-
-.courier label {
+.courier-view label {
     margin: 30px;
 }
 
@@ -94,13 +63,6 @@ ul.couriers {
     color: blue;
 }
 
-.courier .navigation {
-    float: right;
-}
-
-.actions {
-    float: right;
-}
 
 
 .destructive-button:enabled {
