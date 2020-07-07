@@ -109,6 +109,9 @@ const ListEdit = {
             this.selectedItemIndex = (this.selectedItemIndex + 1) % this.pendingItems.length;
         },
         onPrev(){
+            if(this.selectedItemIndex === 0){
+                this.selectedItemIndex = this.pendingItems.length;
+            }
             this.selectedItemIndex = (this.selectedItemIndex - 1) % this.pendingItems.length;
         },
         onMoveUp(ev){
